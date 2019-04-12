@@ -5,23 +5,16 @@ Created on Fri Mar 29 18:59:28 2019
 @author: nEW u
 """
 
-import tweepy #https://github.com/tweepy/tweepy
-import csv
+import tweepy
 import simplejson
-from __future__ import unicode_literals
 from io import open
-import sys
-import numpy as np
 
-key=[]
-f=open("C:/Users/nEW u/Documents/GitHub/sentiment-analysis/twitter_key.txt","r")
-for x in f:
-    key.append(x)
 
-consumer_key=key[0]
-consumer_secret=key[1] 
-access_key=key[2] 
-access_secret=key[3] 
+
+consumer_key="xxxx"
+consumer_secret="xxxx"
+access_key="xxxx"
+access_secret="xxxx"
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
@@ -39,11 +32,9 @@ while len(new_tweets) > 0:
     oldest = alltweets[-1].id - 1
     print( "...%s tweets downloaded so far" % (len(alltweets)))
     
-#outtweets = [[tweet.id, tweet.created_at, tweet.text.encode('utf-8')] for tweet in alltweets]
 
-#np.savetxt("filename.txt",outtweets,)
 
-with open('filename.txt', 'a') as f:
+with open('netflix.txt', 'a') as f:
     for tweet in alltweets:
         simplejson.dump(tweet._json, f)
         f.write('\n')

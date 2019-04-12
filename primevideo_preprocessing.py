@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Apr  1 15:53:36 2019
+Created on Wed Apr 10 20:20:28 2019
 
 @author: nEW u
 """
+
+""
 
 import pandas as pd
 from nltk.tokenize import WordPunctTokenizer
 import re
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
-from bs4 import BeautifulSoup  
-import string 
 import emoji
-import numpy as np
+
  
 
 
-dataset=pd.read_csv("D:/Program Files/netflix_extracted_file.csv",encoding='utf-8')
+dataset=pd.read_csv("C:/Users/nEW u/Documents/GitHub/project_data/primevideo_extracted_csv.csv",encoding='utf-8')
 
 token=WordPunctTokenizer()
 part1=r'@[A-Za-z0-9]+'
@@ -47,5 +47,6 @@ twitter_data=[]
 for tweet in dataset.text:
     twitter_data.append(clean_tweets(tweet))
     
-
+cleaned_primevideo_tweets=pd.DataFrame(twitter_data)
+cleaned_primevideo_tweets.to_csv("C:/Users/nEW u/Documents/GitHub/project_data/cleaned_primevideo_tweets.csv")
     
