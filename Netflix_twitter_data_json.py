@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 29 18:59:28 2019
 
-@author: nEW u
-"""
 
 import tweepy
 import simplejson

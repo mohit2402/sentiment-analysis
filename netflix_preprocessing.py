@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr  1 15:53:36 2019
 
-@author: nEW u
-"""
 
 import pandas as pd
 from nltk.tokenize import WordPunctTokenizer

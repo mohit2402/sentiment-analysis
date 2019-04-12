@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Apr 12 16:37:31 2019
-
-@author: nEW u
-"""
 
 import pandas as pd
 from wordcloud import WordCloud
