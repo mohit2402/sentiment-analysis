@@ -6,7 +6,7 @@ import re
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import emoji
-
+from nltk.stem.porter import PorterStemmer
  
 
 
@@ -29,6 +29,9 @@ def clean_tweets(tweet):
     tweets=tweets.strip('rt')
     #print(tweets)
     tweets=tweets.split()
+    ps=PorterStemmer()
+    porter=[ps.stem(word) for word in tweets if not word in set(stopwords.words('english'))]
+    porter=" ".join(porter)
     lem=WordNetLemmatizer()
     #print(tweets)
     lemma=[lem.lemmatize(word) for word in tweets if not word in set(stopwords.words('english'))]
