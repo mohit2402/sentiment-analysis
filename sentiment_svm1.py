@@ -9,7 +9,6 @@ Created on Tue Apr 16 10:03:21 2019
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import confusion_matrix,accuracy_score
@@ -83,7 +82,7 @@ netflix_y=netflix_tweets.iloc[:,-1]
 prime_x=prime_tweets.iloc[:,0]
 prime_y=prime_tweets.iloc[:,-1]
 
-bow=CountVectorizer(max_features=4000)
+bow=CountVectorizer(max_features=3500)
 netflix_bow=bow.fit_transform(netflix_x).toarray()
 prime_bow=bow.fit_transform(prime_x).toarray()
 
@@ -95,12 +94,8 @@ prime_x_train,prime_x_test,prime_y_train,prime_y_test=train_test_split(prime_bow
 x_train=np.concatenate((netflix_x_train,prime_x_train),axis=0)
 y_train=np.concatenate((netflix_y_train,prime_y_train),axis=None)
 
-#sc_x=StandardScaler()
-#x_train=sc_x.fit_transform(x_train)
-#netflix_x_test=sc_x.transform(netflix_x_test)
-#prime_x_test=sc_x.transform(prime_x_test)
 
-classifier=SVC(kernel='linear',random_state=0)
+classifier=SVC(kernel='rbf',C=10,gamma=0.1,random_state=0)
 classifier.fit(x_train,y_train)
 
 netflix_pred=classifier.predict(netflix_x_test)
@@ -120,3 +115,16 @@ print(prime_ac)
 
 accuracies=cross_val_score(estimator=classifier,X=x_train,y=y_train,cv=10)
 accuracies.mean()
+
+from sklearn. model_selection import GridSearchCV
+parameters=[{'C':[1,10,100],'kernel':['linear']},
+            {'C':[1,10,100],'kernel':['rbf'],'gamma':[0.5,0.1,0.01]}]
+grid_search=GridSearchCV(estimator=classifier,
+                        param_grid=parameters,
+                        scoring='accuracy',
+                        cv=10,
+                        n_jobs=-1)
+grid_search=grid_search.fit(x_train,y_train)
+best_accuracy=grid_search.best_score_
+best_parameters=grid_search.best_params_
+
