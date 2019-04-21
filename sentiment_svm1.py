@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 16 10:03:21 2019
-
-@author: nEW u
-"""
 
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -82,7 +77,7 @@ netflix_y=netflix_tweets.iloc[:,-1]
 prime_x=prime_tweets.iloc[:,0]
 prime_y=prime_tweets.iloc[:,-1]
 
-bow=CountVectorizer(max_features=3500)
+bow=CountVectorizer(max_features=2500)
 netflix_bow=bow.fit_transform(netflix_x).toarray()
 prime_bow=bow.fit_transform(prime_x).toarray()
 
@@ -93,6 +88,7 @@ prime_x_train,prime_x_test,prime_y_train,prime_y_test=train_test_split(prime_bow
 
 x_train=np.concatenate((netflix_x_train,prime_x_train),axis=0)
 y_train=np.concatenate((netflix_y_train,prime_y_train),axis=None)
+
 
 
 classifier=SVC(kernel='rbf',C=10,gamma=0.1,random_state=0)
@@ -111,6 +107,41 @@ print(netflix_cm)
 print(prime_cm)
 print(netflix_ac)
 print(prime_ac)
+
+from sklearn.metrics import precision_recall_fscore_support
+n_fmeasure=precision_recall_fscore_support(netflix_y_test, netflix_pred, average=None,labels=[-1, 0, 1])
+n_df=pd.DataFrame.from_records(n_fmeasure)
+n_df=n_df.drop([3])
+n_df.rename(columns={0:'precision',1:'recall',2:'f1-score'},inplace=True)
+n_df=n_df.rename({0:'negative',1:'neutral',2:'positive'})
+
+n_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+plt.title("fmeasure",fontsize=20)
+plt.xlabel('netflix tweet opinion',fontsize=20)
+plt.savefig('netflix_fmeasure.png')
+
+
+p_fmeasure=precision_recall_fscore_support(prime_y_test, prime_pred, average=None,labels=[-1, 0, 1])
+p_df=pd.DataFrame.from_records(p_fmeasure)
+p_df=p_df.drop([3])
+p_df.rename(columns={0:'precision',1:'recall',2:'f1-score'},inplace=True)
+p_df=p_df.rename({0:'negative',1:'neutral',2:'positive'})
+
+p_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+plt.title("fmeasure",fontsize=20)
+plt.xlabel('prime tweet opinion',fontsize=20)
+plt.savefig('prime_fmeasure.png')
+
+
+
+import scikitplot as skplt
+skplt.metrics.plot_confusion_matrix(netflix_y_test, netflix_pred, normalize=True)
+plt.show()
+plt.savefig('netflix_confusion_matrix.png')
+
+skplt.metrics.plot_confusion_matrix(prime_y_test, prime_pred, normalize=True)
+plt.show()
+plt.savefig('prime_confusion_matrix.png')
 
 
 accuracies=cross_val_score(estimator=classifier,X=x_train,y=y_train,cv=10)
