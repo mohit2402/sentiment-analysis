@@ -1,4 +1,4 @@
-""
+
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -31,4 +31,4 @@ df = df.nlargest(columns="count", n = 10)
 plt.figure(figsize=(16,5))
 graph = sns.barplot(data=df, x= "hashtag", y = "count")
 graph.set(ylabel = 'count')
-plt.show()
+plt.savefig('netflix_hashtag.png')

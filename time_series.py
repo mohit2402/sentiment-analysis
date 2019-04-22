@@ -2,10 +2,10 @@
 import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
-import numpy
 
-netflix_data=pd.read_csv("C:/Users/16054/Documents/GitHub/project_data/netflix_twitter_csv.csv")
-prime_data=pd.read_csv("C:/Users/16054/Documents/GitHub/project_data/primevideo_twitter_csv.csv")
+
+netflix_data=pd.read_csv("C:/Users/nEW u/Documents/GitHub/project_data/netflix_twitter_csv.csv")
+prime_data=pd.read_csv("C:/Users/nEW u/Documents/GitHub/project_data/primevideo_twitter_csv.csv")
 
 
 

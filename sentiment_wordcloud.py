@@ -10,7 +10,7 @@ wordcloud_netflix = WordCloud(width=800, height=500, random_state=21, max_font_s
 plt.figure(figsize=(10, 7))
 plt.imshow(wordcloud_netflix, interpolation="bilinear")
 plt.axis('off')
-plt.show()
+plt.savefig('netflix_wordcloud.png')
 
 
 prime_tweets=pd.read_csv("C:/Users/nEW u/Documents/GitHub/project_data/cleaned_primevideo_tweets.csv")
@@ -20,4 +20,4 @@ wordcloud_prime = WordCloud(width=800, height=500, random_state=21, max_font_siz
 plt.figure(figsize=(10, 7))
 plt.imshow(wordcloud_prime, interpolation="bilinear")
 plt.axis('off')
-plt.show()
+plt.savefig('prime_worldcloud.png')

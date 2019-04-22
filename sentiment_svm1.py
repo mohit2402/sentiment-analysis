@@ -135,12 +135,10 @@ plt.savefig('prime_fmeasure.png')
 
 
 import scikitplot as skplt
-skplt.metrics.plot_confusion_matrix(netflix_y_test, netflix_pred, normalize=True)
-plt.show()
+skplt.metrics.plot_confusion_matrix(netflix_y_test, netflix_pred, normalize=True,title='netflix confusion matrix')
 plt.savefig('netflix_confusion_matrix.png')
 
-skplt.metrics.plot_confusion_matrix(prime_y_test, prime_pred, normalize=True)
-plt.show()
+skplt.metrics.plot_confusion_matrix(prime_y_test, prime_pred, normalize=True,title='prime confusion matrix')
 plt.savefig('prime_confusion_matrix.png')
 
 
