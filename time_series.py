@@ -25,12 +25,14 @@ for i in range(0,len(ex_prime_data['created_at'])):
 
 
 def frequency(dates):
+    d='2018-10-08'
     date_freq={}
     for date in dates:
-        if(date in date_freq):
-            date_freq[date]+=1
-        else:
-            date_freq[date]=1
+        if(date > datetime.datetime.strptime(d,'%Y-%m-%d').date()):
+            if(date in date_freq):
+                date_freq[date]+=1
+            else:
+                date_freq[date]=1
             
     return(date_freq)
     
@@ -45,7 +47,7 @@ prime_freq.rename(columns={0:'prime_tweets'},inplace=True)
 
 ax=netflix_freq.plot(figsize=(10,7),linewidth=2,fontsize=10)
 prime_freq.plot(ax=ax,figsize=(10,7),linewidth=2,fontsize=10)
-plt.xlabel('year',fontsize=15)
+plt.xlabel('year_month',fontsize=15)
 plt.ylabel('tweets',fontsize=15)
-
+plt.title("tweets timeseries",fontsize=15)
 plt.savefig('tweets_timeseries.png')
