@@ -28,7 +28,10 @@ df=pd.DataFrame({'hashtag':list(frequence.keys()),
                  'count':list(frequence.values())})
     
 df = df.nlargest(columns="count", n = 10) 
-plt.figure(figsize=(16,5))
+plt.figure(figsize=(20,8))
 graph = sns.barplot(data=df, x= "hashtag", y = "count")
 graph.set(ylabel = 'count')
+for i in graph.patches:
+    graph.text(i.get_x()+.03,i.get_height()+.3,str(i.get_height()),fontsize=15)
+plt.title("netflix_hashtags",font_size=15)
 plt.savefig('netflix_hashtag.png')

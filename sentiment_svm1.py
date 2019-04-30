@@ -77,7 +77,7 @@ netflix_y=netflix_tweets.iloc[:,-1]
 prime_x=prime_tweets.iloc[:,0]
 prime_y=prime_tweets.iloc[:,-1]
 
-bow=CountVectorizer(max_features=2500)
+bow=CountVectorizer(max_features=3500)
 netflix_bow=bow.fit_transform(netflix_x).toarray()
 prime_bow=bow.fit_transform(prime_x).toarray()
 
@@ -89,6 +89,9 @@ prime_x_train,prime_x_test,prime_y_train,prime_y_test=train_test_split(prime_bow
 x_train=np.concatenate((netflix_x_train,prime_x_train),axis=0)
 y_train=np.concatenate((netflix_y_train,prime_y_train),axis=None)
 
+total_x_test=np.concatenate((netflix_x_test,prime_x_test),axis=0)
+total_y_test=np.concatenate((netflix_y_test,prime_y_test),axis=None)
+
 
 
 classifier=SVC(kernel='rbf',C=10,gamma=0.1,random_state=0)
@@ -96,17 +99,26 @@ classifier.fit(x_train,y_train)
 
 netflix_pred=classifier.predict(netflix_x_test)
 prime_pred=classifier.predict(prime_x_test)
+total_pred=classifier.predict(total_x_test)
+
 
 netflix_cm=confusion_matrix(netflix_y_test,netflix_pred)
 prime_cm=confusion_matrix(prime_y_test,prime_pred)
+total_cm=confusion_matrix(total_y_test,total_pred)
+
 
 netflix_ac=accuracy_score(netflix_y_test,netflix_pred)
 prime_ac=accuracy_score(prime_y_test,prime_pred)
+total_ac=accuracy_score(total_y_test,total_pred)
+
 
 print(netflix_cm)
 print(prime_cm)
 print(netflix_ac)
 print(prime_ac)
+
+print(total_cm)
+print(total_ac)
 
 from sklearn.metrics import precision_recall_fscore_support
 n_fmeasure=precision_recall_fscore_support(netflix_y_test, netflix_pred, average=None,labels=[-1, 0, 1])
@@ -115,10 +127,10 @@ n_df=n_df.drop([3])
 n_df.rename(columns={0:'precision',1:'recall',2:'f1-score'},inplace=True)
 n_df=n_df.rename({0:'negative',1:'neutral',2:'positive'})
 
-n_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
-plt.title("fmeasure",fontsize=20)
-plt.xlabel('netflix tweet opinion',fontsize=20)
-plt.savefig('netflix_fmeasure.png')
+#n_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+#plt.title("fmeasure",fontsize=20)
+#plt.xlabel('netflix tweet opinion',fontsize=20)
+#plt.savefig('netflix_fmeasure.png')
 
 
 p_fmeasure=precision_recall_fscore_support(prime_y_test, prime_pred, average=None,labels=[-1, 0, 1])
@@ -127,10 +139,76 @@ p_df=p_df.drop([3])
 p_df.rename(columns={0:'precision',1:'recall',2:'f1-score'},inplace=True)
 p_df=p_df.rename({0:'negative',1:'neutral',2:'positive'})
 
-p_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
-plt.title("fmeasure",fontsize=20)
-plt.xlabel('prime tweet opinion',fontsize=20)
-plt.savefig('prime_fmeasure.png')
+#p_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+#plt.title("fmeasure",fontsize=20)
+#plt.xlabel('prime tweet opinion',fontsize=20)
+#plt.savefig('prime_fmeasure.png')
+
+precision_df=pd.DataFrame({'netflix_precision':n_df['precision'],'prime_precision':p_df['precision']},index=['negative','neutral','positive'])
+ax=precision_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+
+for i, each in enumerate(precision_df.index):
+    z=0
+    for col in precision_df.columns:
+        y = precision_df.ix[each][col]
+        if(z==0):
+            ax.text(i-0.2,y/2,'{0:.2f}'.format(y))
+            z=1
+        else:
+            ax.text(i+0.1,y/2,'{0:.2f}'.format(y))
+    
+plt.title("precision",fontsize=20)
+plt.xlabel('tweet opinion',fontsize=20)
+plt.savefig('precision.png')
+
+
+recall_df=pd.DataFrame({'netflix_recall':n_df['recall'],'prime_recall':p_df['recall']},index=['negative','neutral','positive'])
+ax1=recall_df.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+for i, each in enumerate(recall_df.index):
+    z=0
+    for col in recall_df.columns:
+        y = recall_df.ix[each][col]
+        if(z==0):
+            ax1.text(i-0.2,y/2,'{0:.2f}'.format(y))
+            z=1
+        else:
+            ax1.text(i+0.1,y/2,'{0:.2f}'.format(y))
+    
+plt.title("recall",fontsize=20)
+plt.xlabel('tweet opinion',fontsize=20)
+plt.savefig('recall.png')
+
+
+
+
+
+avg_n_fmeasure=precision_recall_fscore_support(netflix_y_test, netflix_pred, average='macro',labels=[-1, 0, 1])
+avg_p_fmeasure=precision_recall_fscore_support(prime_y_test, prime_pred, average='macro',labels=[-1, 0, 1])
+
+avg_total=[avg_n_fmeasure,avg_p_fmeasure]
+avg_fmeasure=pd.DataFrame(avg_total)
+avg_fmeasure=avg_fmeasure.drop([3],axis=1)
+avg_fmeasure.rename(columns={0:'precision',1:'recall',2:'f1-score'},inplace=True)
+avg_fmeasure=avg_fmeasure.rename({0:'netflix',1:'prime'})
+ax3=avg_fmeasure.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+for i, each in enumerate(avg_fmeasure.index):
+    z=0
+    for col in avg_fmeasure.columns:
+        y = avg_fmeasure.ix[each][col]
+        if(z==0):
+            ax3.text(i-0.2,y/2,'{0:.2f}'.format(y))
+            z=1
+        elif(z==1):
+            ax3.text(i-0.05,y/2,'{0:.2f}'.format(y))
+            z=2
+            
+        else:
+            ax3.text(i+0.15,y/2,'{0:.2f}'.format(y))
+        
+    
+plt.title("evaluation metrics",fontsize=20)
+plt.xlabel('online streaming',fontsize=20)
+plt.savefig('evaluation_metrics.png')
 
 
 
@@ -140,6 +218,10 @@ plt.savefig('netflix_confusion_matrix.png')
 
 skplt.metrics.plot_confusion_matrix(prime_y_test, prime_pred, normalize=True,title='prime confusion matrix')
 plt.savefig('prime_confusion_matrix.png')
+
+skplt.metrics.plot_confusion_matrix(total_y_test, total_pred, normalize=True,title='confusion matrix')
+plt.savefig('confusion_matrix.png')
+
 
 
 accuracies=cross_val_score(estimator=classifier,X=x_train,y=y_train,cv=10)
