@@ -2,7 +2,6 @@
 import tweepy
 import simplejson
 from io import open
-import pandas
 
 
 consumer_key="xxxx"
