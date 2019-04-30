@@ -152,10 +152,10 @@ for i, each in enumerate(precision_df.index):
     for col in precision_df.columns:
         y = precision_df.ix[each][col]
         if(z==0):
-            ax.text(i-0.2,y/2,'{0:.2f}'.format(y))
+            ax.text(i-0.2,y/2,'{0:.2f}'.format(y),fontsize=15)
             z=1
         else:
-            ax.text(i+0.1,y/2,'{0:.2f}'.format(y))
+            ax.text(i+0.05,y/2,'{0:.2f}'.format(y),fontsize=15)
     
 plt.title("precision",fontsize=20)
 plt.xlabel('tweet opinion',fontsize=20)
@@ -169,10 +169,10 @@ for i, each in enumerate(recall_df.index):
     for col in recall_df.columns:
         y = recall_df.ix[each][col]
         if(z==0):
-            ax1.text(i-0.2,y/2,'{0:.2f}'.format(y))
+            ax1.text(i-0.2,y/2,'{0:.2f}'.format(y),fontsize=15)
             z=1
         else:
-            ax1.text(i+0.1,y/2,'{0:.2f}'.format(y))
+            ax1.text(i+0.05,y/2,'{0:.2f}'.format(y),fontsize=15)
     
 plt.title("recall",fontsize=20)
 plt.xlabel('tweet opinion',fontsize=20)
@@ -185,25 +185,24 @@ plt.savefig('recall.png')
 avg_n_fmeasure=precision_recall_fscore_support(netflix_y_test, netflix_pred, average='macro',labels=[-1, 0, 1])
 avg_p_fmeasure=precision_recall_fscore_support(prime_y_test, prime_pred, average='macro',labels=[-1, 0, 1])
 
-avg_total=[avg_n_fmeasure,avg_p_fmeasure]
-avg_fmeasure=pd.DataFrame(avg_total)
-avg_fmeasure=avg_fmeasure.drop([3],axis=1)
-avg_fmeasure.rename(columns={0:'precision',1:'recall',2:'f1-score'},inplace=True)
-avg_fmeasure=avg_fmeasure.rename({0:'netflix',1:'prime'})
+
+
+avg_fmeasure=pd.DataFrame({'netflix':avg_n_fmeasure,'prime':avg_p_fmeasure})
+avg_fmeasure=avg_fmeasure.drop([3],axis=0)
+avg_fmeasure=avg_fmeasure.rename({0:'precision',1:'recall',2:'f1-score'})
+
+
 ax3=avg_fmeasure.plot.bar(figsize=(10,8),fontsize=20,rot=360)
 for i, each in enumerate(avg_fmeasure.index):
     z=0
     for col in avg_fmeasure.columns:
         y = avg_fmeasure.ix[each][col]
         if(z==0):
-            ax3.text(i-0.2,y/2,'{0:.2f}'.format(y))
+            ax3.text(i-0.2,y/2,'{0:.2f}'.format(y),fontsize=15)
             z=1
-        elif(z==1):
-            ax3.text(i-0.05,y/2,'{0:.2f}'.format(y))
-            z=2
-            
+       
         else:
-            ax3.text(i+0.15,y/2,'{0:.2f}'.format(y))
+            ax3.text(i+0.05,y/2,'{0:.2f}'.format(y),fontsize=15)
         
     
 plt.title("evaluation metrics",fontsize=20)
