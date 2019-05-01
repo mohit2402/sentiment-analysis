@@ -101,6 +101,37 @@ netflix_pred=classifier.predict(netflix_x_test)
 prime_pred=classifier.predict(prime_x_test)
 total_pred=classifier.predict(total_x_test)
 
+def frequency(labels):
+    label_freq={}
+    for l in labels:
+        if(l in label_freq):
+            label_freq[l]+=1
+        else:
+            label_freq[l]=1
+            
+    return(label_freq)
+    
+
+netflix_label=frequency(netflix_pred)
+prime_label=frequency(prime_pred)
+
+pred_labels=pd.DataFrame({'netflix':netflix_label,'prime':prime_label})
+a=pred_labels.plot.bar(figsize=(10,8),fontsize=20,rot=360)
+for i, each in enumerate(pred_labels.index):
+    z=0
+    for col in pred_labels.columns:
+        y = pred_labels.ix[each][col]
+        if(z==0):
+            a.text(i-0.2,y/2,y,fontsize=15)
+            z=1
+        else:
+            a.text(i+0.05,y/2,y,fontsize=15)
+ 
+plt.title("opinion tweets",fontsize=20)
+plt.xlabel('tweet opinion',fontsize=20)
+plt.ylabel("no. of tweets")
+plt.savefig('opinion tweets.png')
+
 
 netflix_cm=confusion_matrix(netflix_y_test,netflix_pred)
 prime_cm=confusion_matrix(prime_y_test,prime_pred)
